@@ -1,0 +1,38 @@
+.card-body{
+  background-color: #EC5E2A;
+  flex-wrap: wrap;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: .5s ease;
+  background-color: #f7f7f7;
+}
+
+// .content_img:hover .overlay {
+//   opacity: 1;
+// }
+
+.btn-initialize:hover{
+    color: #5cb85c ;
+    background-color : transparent;
+}
+
+.btn_visible{
+  display: initial;
+}
+
+.btn_invisible{
+  display: none;
+}
+
+.card:hover .overlay{
+   opacity: 1;
+}

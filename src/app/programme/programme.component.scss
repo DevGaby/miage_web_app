@@ -1,0 +1,24 @@
+img{
+    display: flex;
+    width: 100%;
+    height: 10rem;
+}
+
+.card-body, h3{
+    color: #EC5E2A;
+}
+
+.card{
+    padding: 0;
+    margin: 0;
+    flex: wrap; 
+}
+
+.col{
+    padding: 0;
+    margin: 0;
+}
+
+.list{
+    background-color:#EC5E2A;   
+}

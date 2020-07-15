@@ -1,0 +1,34 @@
+.container-fluid{
+     /* Permet d'ajouter une couleur + opacité + une image */
+    background: linear-gradient(rgba(155, 102, 102, 0.7), rgba(203, 188, 188, 0.7)), 
+     url("../../assets/Background-3_ba2zrk.jpg");
+    background-size: cover;
+}
+
+p{
+    font-size: 20px;
+    text-decoration: none;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+h2{
+    line-height: 65px; 
+    font-size: 65px;
+    padding: 200px 50px 50px;
+    font-weight: bold;
+}
+
+
+.btn{
+     /* haut | droit | bas | gauche */
+    padding: 15px 40px 15px 40px;
+    border-radius: 30px;
+    font-size: 15px;
+    background-color: rgb(236, 94, 42);
+    border: none;
+}
+
+
+
+
+

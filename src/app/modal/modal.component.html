@@ -1,0 +1,36 @@
+<div *ngIf="isModalDisplayed" class="myModal" aria-hidden="true" role="dialog">
+    <div class="modal-dialog">
+        <form [formGroup]="teacherForm" (ngSubmit)="onSubmit()">
+            <div class="modal-content">
+                <div class="modal-header text-center text-uppercase "> nouveau professeur </div>   
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col">
+                        <input type="text" name="lastname" id="lastname" placeholder="Nom" formControlName="lastname">
+                        </div>
+                        <div class="col"> 
+                        <input type="text" name="firstname" id="firstname" placeholder="Prénom" formControlName="firstname">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col py-2">  
+                            <label for="state"> Statut : </label>
+                            <select name="statut" id="statut" formControlName="statut">
+                                <option value="INTERNE">INTERNE</option>
+                                <option value="EXTERNE">EXTERNE</option>
+                            </select> 
+                        </div>
+                    </div>
+                    <div class="row px-3">
+                        <label for="description"> Description :</label>
+                        <textarea class="form-control" id="description" formControlName="description" rows="3" cols="25"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" (click)="closeModal()"> Annuler </button>
+                    <button type="submit" class="btn btn-success" >Valider</button>
+                </div> 
+            </div>
+        </form>
+    </div>
+</div>

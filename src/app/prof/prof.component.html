@@ -1,0 +1,52 @@
+<div class="container-fluid p-0">
+    <div class="title p-2"> <h2 class="text-uppercase"> La liste des profs </h2> </div>
+    <div class="card px-5">
+        <div class="card-body bg-white d-flex" >
+            <div *ngFor='let prof of myProfs' class="card border-secondary m-5" style="width: 18rem;">
+                <div class="card-header d-inline-flex px-0">
+                    <div class="col-10 py-2"> {{ prof?.statut}} </div>
+                    <div class="content_img col-2 py-2 px-0">
+                        <div class="overlay">
+                            <img src="assets/red_bin.png" alt="bin-icon" (click)="deleteProf(prof.id)"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body text-dark pt-2">
+                    <h5 class="card-title">{{ prof?.firstname}} {{ prof?.lastname}}</h5>
+                    <p class="card-text"> {{ prof?.description}} </p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="p-0 bg-white">
+        <div class="row p-2">
+            <div class="col" [ngClass]="{'btn_visible' : myProfs.length > 0, 'btn_invisible': myProfs.length === 0}">
+                <button type="button" class="btn btn-outline-danger btn-lg btn-block text-uppercase text-center" 
+                        id="deleteBtn" (click)="deleteProfs()">
+                        supprimer tous les profs
+                </button>
+            </div>
+            <div class="col" [ngClass]="{'btn_visible' : myProfs.length !== sizeMyProfsInitial, 'btn_invisible': myProfs.length === sizeMyProfsInitial}">
+                <button type="button" class="btn btn-outline-success btn-lg btn-block text-uppercase text-center" 
+                        id="reInitBtn" (click)="reInitList()">
+                        réinitialiser la liste
+                </button>
+            </div>
+                
+        </div> 
+        
+        <div class="row p-2">
+            <div class="col">
+                <button type="button" class="btn btn-outline-primary btn-lg btn-block text-uppercase text-center" 
+                        id="modalBtn" (click)="addTeacher()">
+                        ajouter un professeur
+                </button>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<aside >
+    <app-modal [showModal]="isModalDisplayed" (teacherEventEmitter)="updateList($event)" (modalEventEmitter)="closeModal($event)" ></app-modal>
+</aside>

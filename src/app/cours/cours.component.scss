@@ -1,0 +1,35 @@
+.card-body{
+    background-color: #EC5E2A;
+}
+
+.col{
+    padding: 0;
+    margin: 0;
+}
+
+.btn-delete{
+    color:#d9534f ;
+    background-color:transparent;
+}
+
+.btn-initialize:hover{
+    color: #5cb85c ;
+    background-color : transparent;
+}
+
+.btn-delete:hover{
+    color: #f7f7f7;
+    background-color : #d9534f;
+}
+
+.container-fluid {
+    min-height: 100vh;
+  }
+
+  .btn_visible{
+      display: initial;
+  }
+
+  .btn_invisible{
+    display: none;
+}
