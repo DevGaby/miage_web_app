@@ -1,37 +1,32 @@
 import { Injectable } from '@angular/core';
-import { rawProfs } from '../../data/teachers-list';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
 import { Professeur } from '../model/prof';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfService {
+  readonly URL = 'https://web-coaching-api.herokuapp.com';
+  
+  constructor(private http: HttpClient) { }
 
-  constructor() { }
-
-  getProfs(): Professeur[] {
-   return rawProfs.map(p => new Professeur(p.id, p.lastname, p.firstname, p.statut, p.description));
+  getProfs(): Observable <Professeur []> {
+     return this.http.get<Professeur []>(this.URL + '/professeurs');
   }
+
+  postTeacher(prof: Professeur): Observable<Professeur>{
+    return this.http.post<Professeur>(this.URL + '/professeurs', prof);
+  }
+
+  deleteProfById(id: number): Observable<Professeur> {
+    return this.http.delete<Professeur>(this.URL + '/professeurs' + '/' + id);
+  }
+  
 
   deleteProfs(): Professeur[] {
     return [];
-  }
-
-  deleteProfById(oldList: Professeur[], id: number): Professeur[] {
-    const idTeacher = oldList.findIndex(c => c.id === id);
-    if(idTeacher !== -1){
-      oldList.splice(idTeacher, 1);
-      return oldList;
-    }else {
-      console.log('error id')
-    }
-  }
-
-  postTeacher(oldList: Professeur[], newTeacher: any): Professeur[] {
-    oldList.map(p => new Professeur(p.id, p.firstname, p.lastname, p.statut, p.description));
-    newTeacher = new Professeur((oldList.length + 1), newTeacher.firstname, newTeacher.lastname, newTeacher.state, newTeacher.description);
-    oldList.push(newTeacher);
-    return oldList;
   }
 
 }

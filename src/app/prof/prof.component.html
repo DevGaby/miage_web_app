@@ -4,7 +4,7 @@
         <div class="card-body bg-white d-flex" >
             <div *ngFor='let prof of myProfs' class="card border-secondary m-5" style="width: 18rem;">
                 <div class="card-header d-inline-flex px-0">
-                    <div class="col-10 py-2"> {{ prof?.statut}} </div>
+                    <div class="col-10 py-2"> {{ prof?.status}} </div>
                     <div class="content_img col-2 py-2 px-0">
                         <div class="overlay">
                             <img src="assets/red_bin.png" alt="bin-icon" (click)="deleteProf(prof.id)"/>
@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="card-body text-dark pt-2">
-                    <h5 class="card-title">{{ prof?.firstname}} {{ prof?.lastname}}</h5>
+                    <h5 class="card-title">{{ prof?.firstName}} {{ prof?.lastName}}</h5>
                     <p class="card-text"> {{ prof?.description}} </p>
                 </div>
                 
@@ -27,7 +27,7 @@
                         supprimer tous les profs
                 </button>
             </div>
-            <div class="col" [ngClass]="{'btn_visible' : myProfs.length !== sizeMyProfsInitial, 'btn_invisible': myProfs.length === sizeMyProfsInitial}">
+            <div class="col" [ngClass]="{'btn_visible' : myProfs.length === 0, 'btn_invisible': myProfs.length > 0}">
                 <button type="button" class="btn btn-outline-success btn-lg btn-block text-uppercase text-center" 
                         id="reInitBtn" (click)="reInitList()">
                         réinitialiser la liste
@@ -50,3 +50,11 @@
 <aside >
     <app-modal [showModal]="isModalDisplayed" (teacherEventEmitter)="updateList($event)" (modalEventEmitter)="closeModal($event)" ></app-modal>
 </aside>
+
+<!-- <div class="container-fluid">
+    <div class="row">
+        <div class="col" *ngFor="let prof of myProfs">
+            {{prof | json}}
+        </div>
+    </div>
+</div> -->

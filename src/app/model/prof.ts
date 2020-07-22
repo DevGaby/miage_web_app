@@ -1,6 +1,9 @@
 export class Professeur {
-    constructor(public id: number, public firstname: string, public lastname: string, 
-                public statut: string, public description: string) {}
+    constructor(public id: number, 
+                public firstName: string,
+                public lastName: string, 
+                public status: string, 
+                public description: string) {}
 }
 
 /* Full versionn of constructor

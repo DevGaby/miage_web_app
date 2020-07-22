@@ -9,9 +9,10 @@ import { ProfService } from '../services/prof.service';
   styleUrls: ['./prof.component.scss']
 })
 export class ProfComponent implements OnInit {
+ 
   myProfs: Professeur[] = [];
-  sizeMyProfsInitial: number;
   isModalDisplayed: boolean;
+  teacher: Professeur;
   constructor(private profService: ProfService) { }
 
   ngOnInit(): void {
@@ -19,8 +20,33 @@ export class ProfComponent implements OnInit {
   }
 
   getProfs(): void{
-    this.myProfs = this.profService.getProfs();
-    this.sizeMyProfsInitial = this.myProfs.length;
+    this.profService.getProfs()
+    .subscribe(
+      (data)=> { this.myProfs = data; },
+      (err)=> { console.log(err)}
+    );
+  }
+
+   addTeacher(){
+    this.isModalDisplayed = true;
+  }
+
+  updateList(event: Professeur): void{
+    let teacher = new Professeur(event.id, event.firstName, 
+                    event.lastName, event.status, event.description);
+
+    this.profService.postTeacher(teacher)
+      .subscribe(
+        (data)=> { 
+          this.teacher = data;
+          this.getProfs(); },
+        (err)=> { console.log(err)}
+      );
+    this.isModalDisplayed = false;
+  }
+
+  closeModal(event : boolean): void{
+    this.isModalDisplayed = event;
   }
 
   deleteProfs(): void {
@@ -28,31 +54,16 @@ export class ProfComponent implements OnInit {
   }
 
   deleteProf(profId: number): void {
-    const currentList = this.myProfs.slice(0, this.myProfs.length);
-    this.myProfs = this.profService.deleteProfById(currentList, profId);
+    this.profService.deleteProfById(profId)
+    .subscribe(
+      (data) => { 
+        this.getProfs();},
+      (err)=> { console.log(err)}
+    );
   }
 
   reInitList(): void {
-    const currentList = this.profService.getProfs();
-    currentList.slice(0, this.myProfs.length);
-    currentList.map(c => new Professeur(c.id, c.firstname, c.lastname, c.statut, c.description));
-    this.myProfs = currentList;
+    this.getProfs();
   }
 
-  addTeacher(){
-    this.isModalDisplayed = true;
-  }
-
-  updateList(event: Professeur): void{
-    let newTeacher = new Professeur(event.id, event.firstname, event.lastname, event.statut, event.description);
-    const currentList = this.myProfs.slice(0, this.myProfs.length);
-    event.id = this.myProfs.length + 1;
-    currentList.push(newTeacher);
-    this.myProfs = currentList.slice(0, currentList.length);
-    this.isModalDisplayed = false;
-  }
-
-  closeModal(event : boolean): void{
-    this.isModalDisplayed = event;
-  }
 }
