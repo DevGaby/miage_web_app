@@ -1,43 +1,35 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
 import { rawClasses } from '../../data/classes-list';
 import { Cours } from '../model/cours';
 import { Unit } from '../model/unit';
+import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoursService {
 
-  constructor() { }
+  readonly URL = 'https://web-coaching-api.herokuapp.com';
 
-  getCours(): Cours[] {
-    return rawClasses.map(c => new Cours(c.id, c.label, c.period, c.nbHour, c.teacher, c.detail));
+  constructor(private http: HttpClient) { }
+
+  getCours(): Observable<Cours[]>  {
+    return this.http.get<Cours[]>(this.URL + '/cours');
   }
 
   deleteAllClasses(): Cours[] {
     return [];
   }
 
-  deleteClassById(oldClasses: Cours[], id: number): Cours[] {
-    const idClass = oldClasses.findIndex(c => c.id === id);
-    if(idClass !== -1){
-      oldClasses.splice(idClass, 1);
-      return oldClasses; 
-      /*J'ai décomposé : Qd je fais directement return oldClasses.splice(idClass, 1);
-      Cela me renvoie un tableau avec uniquement lélement que je veux supprimer
-      */
-    }else {
-      console.log('error id');
-    }
-  
+  deleteClassById(id: number): Observable<Cours> {
+    return this.http.delete<Cours>(this.URL + '/cours' + '/' + id);
   }
 
-  postClasse(oldClasses: Cours[], newClasses: any): Cours[] {
-    const hour = new Unit(newClasses.nbHourInput, 'heures');
-    oldClasses.map(c => new Cours(c.id, c.label, c.period, c.nbHour, c.teacher, c.detail));
-    newClasses = new Cours((oldClasses.length + 1), newClasses.titleInput, newClasses.periodInput, hour, newClasses.teacherInput, newClasses.descriptionInput);
-    oldClasses.push(newClasses);
-    // La méthode fonctionne mais ca me creer un tableau cours dans mon tableau Cous existant pkoi?
-    return oldClasses;
+  postClass(cours: Cours): Observable<Cours>{
+    return this.http.post<Cours>(this.URL + '/cours', cours);
   }
+  
 }
