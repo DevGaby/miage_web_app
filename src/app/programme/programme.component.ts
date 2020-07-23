@@ -13,7 +13,17 @@ export class ProgrammeComponent implements OnInit {
   constructor(private coursService: CoursService) { }
 
   ngOnInit(): void {
-    this.myClasses = this.coursService.getCours();
+    this.getCours();
   }
+
+  getCours(){
+    this.coursService.getCours()
+   .subscribe(
+     (data)=> {
+       this.myClasses = data;
+       console.log(this.myClasses);},
+     (err)=> { console.error(err);}
+   )
+ }
 
 }

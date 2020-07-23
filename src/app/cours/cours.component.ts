@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 
-import { Cours } from '../model/cours';
 import { CoursService } from '../services/cours.service';
-import { Unit } from '../model/unit';
+import { ProfService } from '../services/prof.service';
+import { Cours } from '../model/cours';
+import { Professeur } from '../model/prof';
 
 @Component({
   selector: 'app-cours',
@@ -12,45 +13,82 @@ import { Unit } from '../model/unit';
 })
 
 export class CoursComponent implements OnInit {
-  myClasses: Cours[] = [];
-  classForm: FormGroup;
+  myClasses: Cours[] = []; classForm: FormGroup; profSelect: string;
+  profs: Professeur []; professor: Professeur [];
 
-  constructor(private coursService: CoursService, private formBuilder: FormBuilder) {
-    this.classForm = this.formBuilder.group({
-      label: ['', Validators.required],
-      period: ['', Validators.required],
-      nbHour: ['',Validators.required],
-      teacher: ['', Validators.required],
-      detail: ['', Validators.required]
+  constructor(private coursService: CoursService, 
+              private profService: ProfService) {
+                
+    this.classForm = new FormGroup({
+      label: new FormControl('', Validators.required),
+      period: new FormControl('', Validators.required),
+      hours: new FormControl('',Validators.required),
+      professor: new FormControl('', Validators.required),
+      description: new FormControl('', Validators.required)
     });
   }
 
-  ngOnInit() {
-    this.myClasses = this.coursService.getCours();
+  ngOnInit(): void {
+   this.getCours();
+   this.getProfs();
+  }
+
+  getCours(): void{
+     this.coursService.getCours()
+    .subscribe(
+      (data)=> {
+        this.myClasses = data;},
+      (err)=> { console.error(err);}
+    )
+  }
+
+  getProfs(){
+    this.profService.getProfs()
+    .subscribe(
+      (data)=> {
+        this.profs = data;},
+      (err)=> {
+        console.error(err)}
+    ) 
   }
 
   deleteAll(): void {
-    //this.myClasses = this.coursService.deleteAllClasses();
-    this.myClasses = [];
+    this.myClasses = this.coursService.deleteAllClasses();
   }
 
   deleteClass(id: number): void {
-      const currentClasses = this.myClasses.slice(0, this.myClasses.length);
-      this.myClasses = this.coursService.deleteClassById(currentClasses, id);
+    this.coursService.deleteClassById(id)
+    .subscribe(
+      (data) => {
+        let oldClasses = this.myClasses.slice(0, this.myClasses.length);
+        const idClass = oldClasses.findIndex(c => c.id === id);
+        if(idClass !== -1){
+          oldClasses.splice(idClass, 1); 
+          this.myClasses = oldClasses;
+        } else {
+          console.log('error id');
+        } 
+      },
+      (err)=> { console.error(err)}
+    );
   }
 
+
   onSubmit(): void {
-    if (this.classForm.invalid) {
-      alert('Vous n\'avez pas remplis tous les champs');
-      return;
-    }
- 
     const form = this.classForm.value;
-    const newUnity = new Unit(form.nbHour,'heures');
-    form.id = this.myClasses.length + 1;
-    form.nbHour = newUnity;
-    let newCours = new Cours(form.id, form.label, form.period, form.nbHour, form.teacher, form.detail);
-    this.myClasses.push(newCours);
+    if (this.classForm.invalid) 
+      return alert('Vous n\'avez pas remplis tous les champs');
+    else {
+      form.label = form.label.charAt(0).toUpperCase() + form.label.slice(1);
+      form.professor = this.profSelect;
+
+      this.coursService.postClass(form)
+      .subscribe(
+        (data)=> { this.getCours() },
+        (err)=> {
+          console.error(err)}
+      )    
+    }
     this.clearInput();
   }
 
@@ -59,7 +97,17 @@ export class CoursComponent implements OnInit {
   }
 
   reInitBtn(): void {
-    this.deleteAll();
-    this.myClasses = this.coursService.getCours();
+    this.getCours();
+  }
+
+  onTeacherChange(): void {
+    let id = (<HTMLInputElement>document.getElementById("teacher")).value;
+
+    this.profs.forEach((p) => {
+      if(p.id === parseInt(id)){
+        this.profSelect = p.firstName + " " + p.lastName;
+        console.log(this.profSelect);
+      }
+    });
   }
 }

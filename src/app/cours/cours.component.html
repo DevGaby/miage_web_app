@@ -1,50 +1,85 @@
 <div class="container-fluid p-0">
     <div class="card-body">
         <h3 class="text-center">Administrer les cours</h3>
-        <form [formGroup]="classForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="classForm" (ngSubmit)="onSubmit()" novalidate>
             <table id="classTab" class="table table-dark">
                 <thead>
                     <tr class="text-center">
-                    <th scope="col">Id</th>
-                    <th scope="col">Intitulé</th>
-                    <th scope="col">Période</th>
-                    <th scope="col">Nombre d'heures</th>
-                    <th scope="col">Prof</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Action</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Intitulé</th>
+                        <th scope="col">Période</th>
+                        <th scope="col">Nombre d'heures</th>
+                        <th scope="col">Prof</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Action</th>
                     </tr>
                 </thead>
-                <tbody> 
-                    <tr>
-                        <td> # </td>
+                <tbody>  
+                    <tr class="text-center">
+                        <td>
+                            <div class="row"> <div class="col">  #  </div> </div>
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md p-2"> 
+                                    <input type="text" class="form-control" id="label" name="label" formControlName="label" placeholder="Intitulé" required>
+                                </div> 
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md p-2">
+                                    <input type="text" class="form-control" id="period" formControlName="period" placeholder="Période" required>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md p-2">
+                                    <input type="number" class="form-control" id="nbHour" formControlName="hours" placeholder="Nombre d'heure" required>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md p-2">
+                                    <select class="form-control" id="teacher" formControlName="professor" (change)="onTeacherChange()">
+                                    <option class="form-control" *ngFor="let prof of profs; let i = index"  value="{{prof.id}}" required> 
+                                        {{ prof?.firstName}} {{ prof?.lastName }} 
+                                    </option>
+                                </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md p-2">
+                                    <textarea class="form-control" id="detail" formControlName="description" rows="3" cols="25"></textarea>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md p-2">
+                                    <button type="submit" class="btn btn-success text-uppercase text-center"> ajouter </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>               
+                    <tr class="text-center" *ngFor="let class of myClasses">
+                        <td> {{ class?.id }} </td>
+                        <td> {{ class?.label }} </td>
+                        <td> {{ class?.period }} </td>
+                        <td> {{ class?.hours }} h </td>
+                        <td> {{ class?.professor }} </td>
+                        <td> {{ class?.description }} </td> 
                         <td> 
-                            <input type="text" class="form-control" id="label" formControlName="label" placeholder="Intitulé">
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" id="period" formControlName="period" placeholder="Période">
-                        </td>
-                        <td>
-                            <input type="number" class="form-control" id="nbHour" formControlName="nbHour" placeholder="Nombre d'heure">
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" id="teacher" formControlName="teacher" placeholder="Prof">
-                        </td>
-                        <td>
-                            <textarea class="form-control" id="detail" formControlName="detail" rows="3" cols="25"></textarea>
-                        </td>
-                        <td>
-                            <button type="submit" class="btn btn-success text-uppercase text-center"> ajouter </button>
-                        </td>
-                    
-                    </tr>         
-                    <tr *ngFor="let class of myClasses">
-                        <td > {{ class?.id }} </td>
-                        <td > {{ class?.label }} </td>
-                        <td > {{ class?.period }} </td>
-                        <td > {{ class?.nbHour?.valeur }} {{ class?.nbHour?.unity }} </td>
-                        <td > {{ class?.teacher }} </td>
-                        <td > {{ class?.detail }} </td> 
-                        <td > <button type="button" class="btn btn-danger text-uppercase text-center" (click)="deleteClass(class.id)"> supprimer </button> </td> 
+                            <div class="row">
+                                <div class="col">
+                                    <button type="button" class="btn btn-danger text-uppercase text-center" (click)="deleteClass(class.id)"> supprimer </button>
+                                </div>  
+                            </div> 
+                        </td> 
                     </tr>
                 </tbody>
             </table>
