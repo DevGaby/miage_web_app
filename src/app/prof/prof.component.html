@@ -7,7 +7,7 @@
                     <div class="col-10 py-2"> {{ prof?.status}} </div>
                     <div class="content_img col-2 py-2 px-0">
                         <div class="overlay">
-                            <img src="assets/red_bin.png" alt="bin-icon" (click)="deleteProf(prof.id)"/>
+                            <img src="assets/red_bin.png" alt="bin-icon" (click)="deleteProf(prof.id, prof.firstName, prof.lastName )"/>
                         </div>
                     </div>
                 </div>

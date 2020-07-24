@@ -5,6 +5,7 @@ import { CoursService } from '../services/cours.service';
 import { ProfService } from '../services/prof.service';
 import { Cours } from '../model/cours';
 import { Professeur } from '../model/prof';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cours',
@@ -56,7 +57,62 @@ export class CoursComponent implements OnInit {
     this.myClasses = this.coursService.deleteAllClasses();
   }
 
-  deleteClass(id: number): void {
+  deleteClass(id: number, coursName: string): void {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: 'Confirmez-vous la suppression du cours '+ coursName +' ?',
+      text: "Cette action est irreversible!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Oui',
+      cancelButtonText: 'Non',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.value) {
+        this.coursService.deleteClassById(id)
+        .subscribe(
+          (data) => {
+            let oldClasses = this.myClasses.slice(0, this.myClasses.length);
+            const idClass = oldClasses.findIndex(c => c.id === id);
+            if(idClass !== -1){
+              oldClasses.splice(idClass, 1); 
+              this.myClasses = oldClasses;
+              swalWithBootstrapButtons.fire(
+                'Suppression',
+                'Le cours '+ coursName + ' à bien été supprimé',
+                'success'
+              )
+            } else {
+              console.error('error id');
+            }  
+          },
+          (err)=> { console.error(err)}
+        );
+       
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Annulation',
+          'Suppresion interrompue',
+          'error'
+        )
+      }
+    })
+
+
+
+
+
+
+
     this.coursService.deleteClassById(id)
     .subscribe(
       (data) => {
@@ -66,7 +122,7 @@ export class CoursComponent implements OnInit {
           oldClasses.splice(idClass, 1); 
           this.myClasses = oldClasses;
         } else {
-          console.log('error id');
+          console.error('error id');
         } 
       },
       (err)=> { console.error(err)}
@@ -76,17 +132,35 @@ export class CoursComponent implements OnInit {
 
   onSubmit(): void {
     const form = this.classForm.value;
-    if (this.classForm.invalid) 
-      return alert('Vous n\'avez pas remplis tous les champs');
+    if (this.classForm.invalid) {
+      Swal.fire(
+        'Attention',
+        'Vous n\'avez pas remplis tous les champs',
+        'warning'  
+      );
+    }
     else {
       form.label = form.label.charAt(0).toUpperCase() + form.label.slice(1);
       form.professor = this.profSelect;
 
       this.coursService.postClass(form)
       .subscribe(
-        (data)=> { this.getCours() },
+        (data)=> { 
+          this.getCours();
+          Swal.fire(
+            'Bravo',
+            'Votre cours a bien été rajouté',
+            'success'  
+          );
+        },
         (err)=> {
-          console.error(err)}
+          console.error(err);
+          Swal.fire(
+            'Oups',
+            'Une erreur c\'est produite durant l\'ajout',
+            'error'  
+          );
+        }
       )    
     }
     this.clearInput();
@@ -101,12 +175,11 @@ export class CoursComponent implements OnInit {
   }
 
   onTeacherChange(): void {
-    let id = (<HTMLInputElement>document.getElementById("teacher")).value;
+    let id = (<HTMLInputElement>document.getElementById("teacher")).value
 
     this.profs.forEach((p) => {
       if(p.id === parseInt(id)){
         this.profSelect = p.firstName + " " + p.lastName;
-        console.log(this.profSelect);
       }
     });
   }

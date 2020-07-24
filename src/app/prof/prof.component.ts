@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Professeur } from '../model/prof';
 import { ProfService } from '../services/prof.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-prof',
@@ -22,8 +23,8 @@ export class ProfComponent implements OnInit {
   getProfs(): void{
     this.profService.getProfs()
     .subscribe(
-      (data)=> { this.myProfs = data; },
-      (err)=> { console.log(err)}
+      (data)=> { this.myProfs = data;},
+      (err)=> { console.error(err)}
     );
   }
 
@@ -39,8 +40,21 @@ export class ProfComponent implements OnInit {
       .subscribe(
         (data)=> { 
           this.teacher = data;
-          this.getProfs(); },
-        (err)=> { console.log(err)}
+          this.getProfs();
+          Swal.fire(
+            'Bravo',
+            'Votre formateur a bien été rajouté',
+            'success'  
+          );
+        },
+        (err)=> { 
+          console.error(err);
+          Swal.fire(
+            'Oups',
+            'Une erreur c\'est produite durant l\'ajout',
+            'error'  
+          );
+        }
       );
     this.isModalDisplayed = false;
   }
@@ -53,13 +67,48 @@ export class ProfComponent implements OnInit {
     this.myProfs = this.profService.deleteProfs();
   }
 
-  deleteProf(profId: number): void {
-    this.profService.deleteProfById(profId)
-    .subscribe(
-      (data) => { 
-        this.getProfs();},
-      (err)=> { console.log(err)}
-    );
+  deleteProf(profId: number, prenom: string, nom: string): void {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false
+    })
+    
+    swalWithBootstrapButtons.fire({
+      title: 'Confirmez-vous la suppression du professeur '+ prenom +' '+ nom +' ?',
+      text: "Cette action est irreversible!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Oui',
+      cancelButtonText: 'Non',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.value) {
+          this.profService.deleteProfById(profId)
+          .subscribe(
+            (data) => { 
+              this.getProfs(); 
+              swalWithBootstrapButtons.fire(
+              'Suppression',
+              'Le professeur '+ prenom +' '+ nom +' à bien été supprimé',
+              'success'
+            )
+            },
+            (err)=> { console.error(err)}
+          );
+       
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire(
+          'Annulation',
+          'Suppresion interrompue',
+          'error'
+        )
+      }
+    })
   }
 
   reInitList(): void {

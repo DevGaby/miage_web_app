@@ -20,8 +20,7 @@ export class ProgrammeComponent implements OnInit {
     this.coursService.getCours()
    .subscribe(
      (data)=> {
-       this.myClasses = data;
-       console.log(this.myClasses);},
+       this.myClasses = data;},
      (err)=> { console.error(err);}
    )
  }

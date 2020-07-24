@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Professeur } from '../model/prof';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal',
@@ -28,16 +29,20 @@ export class ModalComponent implements OnInit {
   onSubmit(): void{
     let form = this.teacherForm.value;
     if (!form ||!form.lastName || !form.firstName || !form.status || !form.description)
-      return alert('Vous n\'avez pas remplis tous les champs');
+      {
+        Swal.fire(
+          'Attention',
+          'Vous n\'avez pas remplis tous les champs',
+          'warning'  
+        );
+      }
     else{
       form.lastName = form.lastName.toUpperCase();
       form.firstName = form.firstName.charAt(0).toUpperCase() + form.firstName.slice(1);
       form.status = form.status.toLowerCase();
+      this.teacherEventEmitter.emit(form);
+      this.teacherForm.reset();
     }
-     
-  
-    this.teacherEventEmitter.emit(form);
-    this.teacherForm.reset();
   }
 
   closeModal(){
