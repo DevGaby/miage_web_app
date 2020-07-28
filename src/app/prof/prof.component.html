@@ -14,8 +14,7 @@
                 <div class="card-body text-dark pt-2">
                     <h5 class="card-title">{{ prof?.firstName}} {{ prof?.lastName}}</h5>
                     <p class="card-text"> {{ prof?.description}} </p>
-                </div>
-                
+                </div>              
             </div>
         </div>
     </div>
@@ -32,8 +31,7 @@
                         id="reInitBtn" (click)="reInitList()">
                         réinitialiser la liste
                 </button>
-            </div>
-                
+            </div>                
         </div> 
         
         <div class="row p-2">
@@ -50,11 +48,3 @@
 <aside >
     <app-modal [showModal]="isModalDisplayed" (teacherEventEmitter)="updateList($event)" (modalEventEmitter)="closeModal($event)" ></app-modal>
 </aside>
-
-<!-- <div class="container-fluid">
-    <div class="row">
-        <div class="col" *ngFor="let prof of myProfs">
-            {{prof | json}}
-        </div>
-    </div>
-</div> -->

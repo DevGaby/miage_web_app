@@ -14,8 +14,8 @@ import Swal from 'sweetalert2';
 })
 
 export class CoursComponent implements OnInit {
-  myClasses: Cours[] = []; classForm: FormGroup; profSelect: string;
-  profs: Professeur []; professor: Professeur [];
+  myClasses: Cours[] = []; classForm: FormGroup;  
+  selectedProf: string; profs: Professeur [];
 
   constructor(private coursService: CoursService, 
               private profService: ProfService) {
@@ -49,7 +49,7 @@ export class CoursComponent implements OnInit {
       (data)=> {
         this.profs = data;},
       (err)=> {
-        console.error(err)}
+        console.error(err);}
     ) 
   }
 
@@ -107,12 +107,6 @@ export class CoursComponent implements OnInit {
       }
     })
 
-
-
-
-
-
-
     this.coursService.deleteClassById(id)
     .subscribe(
       (data) => {
@@ -129,7 +123,6 @@ export class CoursComponent implements OnInit {
     );
   }
 
-
   onSubmit(): void {
     const form = this.classForm.value;
     if (this.classForm.invalid) {
@@ -141,7 +134,7 @@ export class CoursComponent implements OnInit {
     }
     else {
       form.label = form.label.charAt(0).toUpperCase() + form.label.slice(1);
-      form.professor = this.profSelect;
+      form.professor = this.selectedProf;
 
       this.coursService.postClass(form)
       .subscribe(
@@ -179,7 +172,7 @@ export class CoursComponent implements OnInit {
 
     this.profs.forEach((p) => {
       if(p.id === parseInt(id)){
-        this.profSelect = p.firstName + " " + p.lastName;
+        this.selectedProf = p.firstName + " " + p.lastName;
       }
     });
   }
