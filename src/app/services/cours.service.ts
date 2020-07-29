@@ -12,20 +12,20 @@ import { Observable } from 'rxjs';
 })
 export class CoursService {
 
-  readonly URL = 'https://web-coaching-api.herokuapp.com';
+  readonly coursEndpoint = 'https://web-coaching-api.herokuapp.com/cours';
 
   constructor(private http: HttpClient) { }
 
   getCours(): Observable<Cours[]>  {
-    return this.http.get<Cours[]>(this.URL + '/cours');
+    return this.http.get<Cours[]>(this.coursEndpoint);
   }
 
   deleteClassById(id: number): Observable<Cours> {
-    return this.http.delete<Cours>(this.URL + '/cours' + '/' + id);
+    return this.http.delete<Cours>(this.coursEndpoint + '/' + id);
   }
 
   postClass(cours: Cours): Observable<Cours>{
-    return this.http.post<Cours>(this.URL + '/cours', cours);
+    return this.http.post<Cours>(this.coursEndpoint, cours);
   }
   
 }

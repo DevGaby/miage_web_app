@@ -38,6 +38,7 @@ export class ModalComponent implements OnInit {
       }
     else{
       form.lastName = form.lastName.toUpperCase();
+      //essayer de créer un pipe qui va faire le upperCase + slice...
       form.firstName = form.firstName.charAt(0).toUpperCase() + form.firstName.slice(1);
       form.status = form.status.toLowerCase();
       this.teacherEventEmitter.emit(form);

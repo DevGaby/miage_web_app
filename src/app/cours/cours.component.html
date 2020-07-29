@@ -43,9 +43,9 @@
                         <td>
                             <div class="row">
                                 <div class="col-md p-2">
-                                    <select class="form-control" id="teacher" formControlName="professor" (change)="onTeacherChange()">
-                                    <option class="form-control" *ngFor="let prof of profs; let i = index"  value="{{prof.id}}" required> 
-                                        {{ prof?.firstName}} {{ prof?.lastName }} 
+                                    <select class="form-control" id="teacher" formControlName="professor">
+                                    <option class="form-control" *ngFor="let prof of profs; let i = index"  value="{{getProfCompleteName(prof)}}" required> 
+                                        {{getProfCompleteName(prof)}} 
                                     </option>
                                 </select>
                                 </div>

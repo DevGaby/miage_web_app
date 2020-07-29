@@ -34,7 +34,7 @@ export class ProfComponent implements OnInit {
     ) 
   }
 
-   addTeacher(){
+   addTeacher():void {
     this.isModalDisplayed = true;
   }
 
@@ -95,6 +95,8 @@ export class ProfComponent implements OnInit {
           this.profService.deleteProfById(profId)
           .subscribe(
             (data) => { 
+              //ne pas faire this.getProfs
+              //retirer le prof du this.myProfs
               this.getProfs(); 
               swalWithBootstrapButtons.fire(
               'Suppression',

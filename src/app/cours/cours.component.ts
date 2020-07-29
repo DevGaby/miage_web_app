@@ -14,8 +14,10 @@ import Swal from 'sweetalert2';
 })
 
 export class CoursComponent implements OnInit {
-  myClasses: Cours[] = []; classForm: FormGroup;  
-  selectedProf: string; profs: Professeur [];
+
+  myClasses: Cours[] = []; 
+  classForm: FormGroup;  
+  profs: Professeur [];
 
   constructor(private coursService: CoursService, 
               private profService: ProfService) {
@@ -30,6 +32,8 @@ export class CoursComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // essayer d'utiliser le forkJoin de RXJS
+    //https://www.learnrxjs.io/learn-rxjs/operators/combination/forkjoin
    this.getCours();
    this.getProfs();
   }
@@ -38,12 +42,14 @@ export class CoursComponent implements OnInit {
      this.coursService.getCours()
     .subscribe(
       (data)=> {
-        this.myClasses = data;},
-      (err)=> {Swal.fire(
+        this.myClasses = data;
+      },
+      (err)=> {
+        Swal.fire(
         'Attention',
         'Une erreur c\'est produit lors du chargement des cours',
-        'warning'  
-      );}
+        'warning');
+      }
     )
   }
 
@@ -51,7 +57,8 @@ export class CoursComponent implements OnInit {
     this.profService.getProfs()
     .subscribe(
       (data)=> {
-        this.profs = data;},
+        this.profs = data;
+      },
       (err)=> {
         Swal.fire(
           'Attention',
@@ -64,7 +71,7 @@ export class CoursComponent implements OnInit {
   deleteAll(): void {
     this.myClasses =[];
   }
-
+  //essayer de créer des sous fonctions pour réduire la taille de la fonction
   deleteClass(id: number, coursName: string): void {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
@@ -86,12 +93,11 @@ export class CoursComponent implements OnInit {
       if (result.value) {
         this.coursService.deleteClassById(id)
         .subscribe(
-          (data) => {
-            let oldClasses = this.myClasses.slice(0, this.myClasses.length);
-            const idClass = oldClasses.findIndex(c => c.id === id);
-            if(idClass !== -1){
-              oldClasses.splice(idClass, 1); 
-              this.myClasses = oldClasses;
+          () => {
+            //supprimer le cours
+            const classIndex = this.myClasses.findIndex(c => c.id === id);
+            if(classIndex !== -1){
+              this.myClasses.splice(classIndex, 1); 
               swalWithBootstrapButtons.fire(
                 'Suppression',
                 'Le cours '+ coursName + ' à bien été supprimé',
@@ -101,7 +107,10 @@ export class CoursComponent implements OnInit {
               console.error('error id');
             }  
           },
-          (err)=> { console.error(err)}
+          (err)=> { 
+            //afficher l'erreur à l'utilisateur
+            console.error(err)
+          }
         );
        
       } else if (
@@ -114,21 +123,6 @@ export class CoursComponent implements OnInit {
         )
       }
     })
-
-    this.coursService.deleteClassById(id)
-    .subscribe(
-      (data) => {
-        let oldClasses = this.myClasses.slice(0, this.myClasses.length);
-        const idClass = oldClasses.findIndex(c => c.id === id);
-        if(idClass !== -1){
-          oldClasses.splice(idClass, 1); 
-          this.myClasses = oldClasses;
-        } else {
-          console.error('error id');
-        } 
-      },
-      (err)=> { console.error(err)}
-    );
   }
 
   onSubmit(): void {
@@ -142,8 +136,6 @@ export class CoursComponent implements OnInit {
     }
     else {
       form.label = form.label.charAt(0).toUpperCase() + form.label.slice(1);
-      form.professor = this.selectedProf;
-
       this.coursService.postClass(form)
       .subscribe(
         (data)=> { 
@@ -174,13 +166,7 @@ export class CoursComponent implements OnInit {
     this.getCours();
   }
 
-  onTeacherChange(): void {
-    let id = (<HTMLInputElement>document.getElementById("teacher")).value
-
-    this.profs.forEach((p) => {
-      if(p.id === parseInt(id)){
-        this.selectedProf = p.firstName + " " + p.lastName;
-      }
-    });
+  getProfCompleteName(prof):string {
+    return prof?.firstName + " " + prof?.lastName;
   }
 }
