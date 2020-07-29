@@ -39,7 +39,11 @@ export class CoursComponent implements OnInit {
     .subscribe(
       (data)=> {
         this.myClasses = data;},
-      (err)=> { console.error(err);}
+      (err)=> {Swal.fire(
+        'Attention',
+        'Une erreur c\'est produit lors du chargement des cours',
+        'warning'  
+      );}
     )
   }
 
@@ -49,12 +53,16 @@ export class CoursComponent implements OnInit {
       (data)=> {
         this.profs = data;},
       (err)=> {
-        console.error(err);}
+        Swal.fire(
+          'Attention',
+          'Une erreur c\'est produit lors du chargement des professeurs',
+          'warning'  
+        );}
     ) 
   }
 
   deleteAll(): void {
-    this.myClasses = this.coursService.deleteAllClasses();
+    this.myClasses =[];
   }
 
   deleteClass(id: number, coursName: string): void {
@@ -139,7 +147,7 @@ export class CoursComponent implements OnInit {
       this.coursService.postClass(form)
       .subscribe(
         (data)=> { 
-          this.getCours();
+          this.myClasses.push(data);
           Swal.fire(
             'Bravo',
             'Votre cours a bien été rajouté',
@@ -147,7 +155,6 @@ export class CoursComponent implements OnInit {
           );
         },
         (err)=> {
-          console.error(err);
           Swal.fire(
             'Oups',
             'Une erreur c\'est produite durant l\'ajout',

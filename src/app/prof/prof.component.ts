@@ -20,12 +20,18 @@ export class ProfComponent implements OnInit {
     this.getProfs();
   }
 
-  getProfs(): void{
+  getProfs(){
     this.profService.getProfs()
     .subscribe(
-      (data)=> { this.myProfs = data;},
-      (err)=> { console.error(err)}
-    );
+      (data)=> {
+        this.myProfs = data;},
+      (err)=> {
+        Swal.fire(
+          'Attention',
+          'Une erreur c\'est produit lors du chargement des professeurs',
+          'warning'  
+        );}
+    ) 
   }
 
    addTeacher(){
@@ -40,7 +46,8 @@ export class ProfComponent implements OnInit {
       .subscribe(
         (data)=> { 
           this.teacher = data;
-          this.getProfs();
+          this.myProfs.push(this.teacher);
+          //this.getProfs();
           Swal.fire(
             'Bravo',
             'Votre formateur a bien été rajouté',
@@ -48,7 +55,6 @@ export class ProfComponent implements OnInit {
           );
         },
         (err)=> { 
-          console.error(err);
           Swal.fire(
             'Oups',
             'Une erreur c\'est produite durant l\'ajout',
@@ -64,7 +70,7 @@ export class ProfComponent implements OnInit {
   }
 
   deleteProfs(): void {
-    this.myProfs = this.profService.deleteProfs();
+    this.myProfs = [];
   }
 
   deleteProf(profId: number, prenom: string, nom: string): void {

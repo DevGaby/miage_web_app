@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CoursService } from '../services/cours.service';
 import { Cours } from '../model/cours';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-programme',
@@ -16,12 +17,17 @@ export class ProgrammeComponent implements OnInit {
     this.getCours();
   }
 
-  getCours(){
+  getCours(): void{
     this.coursService.getCours()
    .subscribe(
      (data)=> {
        this.myClasses = data;},
-     (err)=> { console.error(err);}
+     (err)=> {
+       Swal.fire(
+       'Attention',
+       'Une erreur c\'est produit lors du chargement des cours',
+       'warning'  
+     );}
    )
  }
 

@@ -24,9 +24,4 @@ export class ProfService {
     return this.http.delete<Professeur>(this.URL + '/professeurs' + '/' + id);
   }
   
-
-  deleteProfs(): Professeur[] {
-    return [];
-  }
-
 }

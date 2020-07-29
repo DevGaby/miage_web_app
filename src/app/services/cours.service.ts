@@ -20,10 +20,6 @@ export class CoursService {
     return this.http.get<Cours[]>(this.URL + '/cours');
   }
 
-  deleteAllClasses(): Cours[] {
-    return [];
-  }
-
   deleteClassById(id: number): Observable<Cours> {
     return this.http.delete<Cours>(this.URL + '/cours' + '/' + id);
   }
