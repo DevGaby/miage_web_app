@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Professeur } from '../model/prof';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal',
@@ -15,25 +16,34 @@ export class ModalComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) { 
     this.teacherForm = this.formBuilder.group({
-      lastname: '',
-      firstname: '',
-      statut: '',
+      lastName: '',
+      firstName: '',
+      status: '',
       description: ''
     });
   }
 
   ngOnInit(): void{
-    console.log(this.isModalDisplayed);
   }
 
   onSubmit(): void{
-    const form = this.teacherForm.value;
-    if (!form ||!form.lastname || !form.firstname || !form.statut || !form.description) {
-      alert('Vous n\'avez pas remplis tous les champs');
-      return;
+    let form = this.teacherForm.value;
+    if (!form ||!form.lastName || !form.firstName || !form.status || !form.description)
+      {
+        Swal.fire(
+          'Attention',
+          'Vous n\'avez pas remplis tous les champs',
+          'warning'  
+        );
+      }
+    else{
+      form.lastName = form.lastName.toUpperCase();
+      //essayer de créer un pipe qui va faire le upperCase + slice...
+      form.firstName = form.firstName.charAt(0).toUpperCase() + form.firstName.slice(1);
+      form.status = form.status.toLowerCase();
+      this.teacherEventEmitter.emit(form);
+      this.teacherForm.reset();
     }
-    this.teacherEventEmitter.emit(form);
-    this.teacherForm.reset();
   }
 
   closeModal(){

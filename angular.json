@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "miageWebApp"
+    }
+  },
+  "defaultProject": "miageWebApp",
+  "cli": {
+    "analytics": false
+  }
 }
